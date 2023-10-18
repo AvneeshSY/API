@@ -37,9 +37,19 @@ public class MyController {
     // Save a new Course----------------------------Save a new Course--------------------------Save a new Course
 	
 	@PostMapping("/savecourse")
-	public coursetable saveCourse(@RequestBody coursetable obj) {
-		return Courseservice.saveCourse(obj);
+	public ResponseEntity<?> saveCourse(@RequestBody coursetable obj) {
+	    // Check if a course with the provided courseId already exists
+	    coursetable existingCourse = Courseservice.findByCourseId(obj.getCourseId());
+
+	    if (existingCourse != null) {
+	        return ResponseEntity.badRequest().body("Course with the provided courseId already exists.");
+	    }
+
+	    coursetable savedCourse = Courseservice.saveCourse(obj);
+
+	    return ResponseEntity.ok(savedCourse);
 	}
+
 	 
 
 	
